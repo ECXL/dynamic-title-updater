@@ -13,31 +13,16 @@ auth_level = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
 
 def fetch_total_population():
-    # fetch number of people
+    # fetch number of people from REST countries API
     url = "https://restcountries.com/v3.1/all?fields=population"
 
     try:
-        response = requests.get(url)
-
-        countries = response.json()
-
-        # get all countries and sum their populations
-        total_population = sum(country.get('population', 0) for country in countries)
+        
 
         return total_population
 
-    except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurred: {http_err}")
-    except requests.exceptions.ConnectionError as conn_err:
-        print(f"Connection error occurred: {conn_err}")
-    except requests.exceptions.Timeout as timeout_err:
-        print(f"Timeout error occurred: {timeout_err}")
-    except requests.exceptions.RequestException as req_err:
-        print(f"General request error: {req_err}")
-    except ValueError as json_err:
-        print(f"JSON decode error: {json_err}")
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(f"Error updating title: {e}")
 
     # if the request get does not work, it returns None
     return None

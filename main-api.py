@@ -1,6 +1,6 @@
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
-import googleapiclient.errors
+
 from time import sleep
 
 import requests
@@ -11,6 +11,9 @@ YOUTUBE_ID = os.getenv("YOUTUBE_ID")
 # read/write auth access
 auth_level = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
+'''
+This is a legacy version using an API in case the main breaks. Won't be as accurate as main or update as often but should not break in the future as easily due to not requiring web scraping.
+'''
 
 def fetch_total_population():
     # fetch number of people from REST countries API

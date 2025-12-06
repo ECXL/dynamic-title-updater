@@ -13,4 +13,5 @@ Made this to update an old video idea about an updating YouTube title. Code brok
 pip install -r requirements.txt
 ```
 YouTube account and a YouTube data API project on Google Cloud with credentials to edit YouTube title. Guide on how to do that is on YouTube's [Obtaining authorization credentials guide](https://developers.google.com/youtube/registering_an_application) and on Google's [Using OAuth 2.0 to Access Google APIs guide](https://developers.google.com/identity/protocols/oauth2). Generate client secret and put it into a file called `CLIENT_SECRET.json`. Example for how it should look in `example_CLIENT_SECRET.json`.
+
 Uploaded YouTube video. Get the YouTube video id (not the same as the full url) and put it into a .env in the same format as `example.env` (wihout the square brackets).

@@ -99,13 +99,13 @@ def main():
                 response = request.execute()
                 print("Updated to: " + title_updated)
             else:
-                print("Title already most recent API call")
+                print("Title already most recent call")
 
 
         except Exception as e:
             print(f"Error updating title: {e}")
 
-        sleep(60*10) # update every ten minutes, feel free to customize
+        sleep(60) # update every minute, feel free to customize
 
 
 if __name__ == "__main__":

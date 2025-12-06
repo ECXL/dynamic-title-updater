@@ -1,9 +1,13 @@
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
-import googleapiclient.errors
+
 from time import sleep
 
-import requests
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 import os
 YOUTUBE_ID = os.getenv("YOUTUBE_ID")
@@ -13,31 +17,32 @@ auth_level = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
 
 def fetch_total_population():
-    # fetch number of people
-    url = "https://restcountries.com/v3.1/all?fields=population"
+    # Selenium to scrape from Worldometers the world population
 
     try:
-        response = requests.get(url)
+        options = Options()
+        options.add_argument("--headless")
+        driver = webdriver.Firefox(options=options)
+        driver.implicitly_wait(5)
 
-        countries = response.json()
+        driver.get("https://www.worldometers.info/world-population/")
 
-        # get all countries and sum their populations
-        total_population = sum(country.get('population', 0) for country in countries)
+        # data takes a bit to load on the Worldometers page. This wait allows it to load.
+        counter = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CLASS_NAME, "rts-counter"))
+                )
 
+        # specifically while loading the element we want has the text "retrieving data..." rather than a number like we want. This waits explicitly until there is a number there before fetching it.
+        WebDriverWait(driver, 10).until(
+            lambda d: counter.text and counter.text != "retrieving data..." and any(char.isdigit() for char in counter.text)
+        )
+
+        total_population = counter.text
+        driver.quit() # quits the selenium web scraper
         return total_population
 
-    except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurred: {http_err}")
-    except requests.exceptions.ConnectionError as conn_err:
-        print(f"Connection error occurred: {conn_err}")
-    except requests.exceptions.Timeout as timeout_err:
-        print(f"Timeout error occurred: {timeout_err}")
-    except requests.exceptions.RequestException as req_err:
-        print(f"General request error: {req_err}")
-    except ValueError as json_err:
-        print(f"JSON decode error: {json_err}")
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(f"Error updating title: {e}")
 
     # if the request get does not work, it returns None
     return None
@@ -77,10 +82,10 @@ def main():
             if total_population is None:
                 raise ValueError("Failed to calculate total population")
 
-            print(f"Total population: {total_population:,}")
+            print(f"Total population: {total_population}")
 
             # update title
-            title_updated = f"THERE ARE {total_population:,} PEOPLE ON EARTH"
+            title_updated = f"THERE ARE {total_population} PEOPLE ON EARTH"
 
             if title != title_updated:
                 vid_snippet["title"] = title_updated
@@ -94,13 +99,13 @@ def main():
                 response = request.execute()
                 print("Updated to: " + title_updated)
             else:
-                print("Title already most recent API call")
+                print("Title already most recent call")
 
 
         except Exception as e:
             print(f"Error updating title: {e}")
 
-        sleep(60*10) # update every ten minutes
+        sleep(60) # update every minute, feel free to customize
 
 
 if __name__ == "__main__":

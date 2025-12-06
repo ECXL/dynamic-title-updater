@@ -5,7 +5,7 @@ There is also a version using [REST Countries API](https://restcountries.com/?re
 
 *Inspired by Tom Scott's view count updating YouTube video.*
 
-Made this to update an old video idea about an updating YouTube title. Code broke a while back so writing new code for it from the ground up.
+Made this to update an old video idea about a dynamic YouTube title revolving around the current world population. Code broke a while back so writing new code for it from the ground up.
 
 ## Requirements
 
